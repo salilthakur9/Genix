@@ -1,0 +1,12 @@
+Genix (Generative Ai Tool Provider)
+-----------------------------------
+
+Description:- To be added soon...
+
+
+
+
+
+1. Basic setup Client (vite-react, tailwind, imp dependencies)
+2. Basic setup Server (nodejs setup, backend dependencies, type:module)
+3. folder structure and .env-gitignore setup.
