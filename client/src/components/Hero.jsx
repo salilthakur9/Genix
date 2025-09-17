@@ -9,7 +9,7 @@ const Hero = () => {
       <div className="text-center mb-6">
         <h1 className="text-3xl sm:text-5xl md:text-6xl 2xl:text-7xl font-semibold mx-auto leading-[1.2]">
           Create amazing content <br /> with{" "}
-          <span className="text-primary">AI tools</span>
+          <span className="text-blue-300">AI tools</span>
         </h1>
         <p className="mt-4 max-w-xs sm:max-w-lg 2xl:max-w-xl m-auto">
           "Say goodbye to creative blocks. Genix lets you create high-quality content in seconds using powerful AI."
@@ -19,11 +19,11 @@ const Hero = () => {
       <div className="flex flex-wrap justify-center gap-4 text-sm max-sm:text-xs">
         <button
           onClick={() => navigate("/ai")}
-          className="bg-primary text-white px-10 py-3 rounded-full hover:scale-102 active:scale-95 transition cursor-pointer"
+          className="bg-blue-300 text-black px-10 py-3 rounded-full hover:scale-102 active:scale-95 transition cursor-pointer"
         >
           Start Creating Now
         </button>
-        <button className="bg-white px-10 py-3 rounded-full border border-gray-300 hover:scale-102 active:scale-95 transition cursor-pointer">
+        <button className="bg-white px-10 py-3 rounded-full border border-blue-300 hover:scale-102 active:scale-95 transition cursor-pointer">
           Watch Demo
         </button>
       </div>
