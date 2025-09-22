@@ -41,7 +41,7 @@ const Testimonial = () => {
                     <span className="text-xs text-slate-500">{card.handle}</span>
                 </div>
             </div>
-            <p className="text-sm py-4 text-gray-800">Script is the best ever AI-tool i've ever used, it's really 6 in one dude !! Love it.</p>
+            <p className="text-sm py-4 text-gray-800">Genix is the best ever AI-tool i've ever used, it's really 6 in one dude !! Love it.</p>
             <div className="flex items-center justify-between text-slate-500 text-xs">
                 <div className="flex items-center gap-1">
                     <span>Posted on</span>

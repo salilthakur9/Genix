@@ -9,9 +9,12 @@ import RemoveBackground from './pages/RemoveBackground'
 import RemoveObject from './pages/RemoveObject'
 import Coder from './pages/Coder'
 
+import {Toaster} from 'react-hot-toast'
+
 const App = () => {
   return (
     <div>
+      <Toaster />
       <Routes>
         <Route path='/' element={<Home />}/>
           <Route path='/ai' element={<Layout/>}>

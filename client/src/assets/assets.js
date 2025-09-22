@@ -1,5 +1,5 @@
 import logo from "./logo.svg";
-import { SquarePen, Hash, Image, Eraser, Scissors, FileText } from 'lucide-react'
+import { SquarePen, Hash, Image, Eraser, Scissors, FileText, Mail, Code } from 'lucide-react'
 
 
 export const assets={
@@ -16,9 +16,9 @@ export const AiToolsData = [
         path: '/ai/write-article'
     },
     {
-        title: 'Blog Title Generator',
-        description: 'Find the perfect, catchy title for your blog posts with our AI-powered generator.',
-        Icon: Hash,
+        title: 'AI Email Writer',
+        description: 'Generate emails dedicated to your designations and respective subjects.',
+        Icon: Mail,
         bg: { from: '#B153EA', to: '#E549A3' },
         path: '/ai/blog-titles'
     },
@@ -44,9 +44,9 @@ export const AiToolsData = [
         path: '/ai/remove-object'
     },
     {
-        title: 'Resume Reviewer',
-        description: 'Get your resume reviewed by AI to improve your chances of landing your dream job.',
-        Icon: FileText,
+        title: 'Multi-Lang Coder',
+        description: 'Give a function and let the coder implement that function in any language of your choice.',
+        Icon: Code,
         bg: { from: '#12B7AC', to: '#08B6CE' },
         path: '/ai/review-resume'
     }
