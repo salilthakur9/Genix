@@ -2,7 +2,7 @@ import React from 'react'
 
 const Coder = () => {
   return (
-    <div>Coder</div>
+    <div>Coming soon</div>
   )
 }
 

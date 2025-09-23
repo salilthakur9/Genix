@@ -61,23 +61,16 @@ export const generateArticle = async (req, res) => {
 export const generateEmail = async (req, res) => {
   try {
     const { userId } = req.auth();
-    const { subject, receiverDesignation, yourDesignation, tone } = req.body;
+    const { prompt, tone } = req.body;  
     const plan = req.plan;
     const free_usage = req.free_usage;
 
-    if (plan !== 'premium' && free_usage >= 10) {
+    if (plan !== "premium" && free_usage >= 10) {
       return res.json({
         success: false,
         message: "Limit reached, upgrade to continue.",
       });
     }
-
-    const prompt = `
-    Generate a ${tone} email with the following details:
-    - Subject: ${subject}
-    - Receiver's Designation: ${receiverDesignation}
-    - Sender's Designation: ${yourDesignation}
-    `;
 
     const response = await AI.chat.completions.create({
       model: "gemini-2.0-flash",
@@ -93,9 +86,12 @@ export const generateEmail = async (req, res) => {
 
     const content = response.choices[0].message.content;
 
-    await sql`INSERT INTO creations (user_id, prompt, content, type) VALUES (${userId}, ${prompt}, ${content}, 'email')`;
+    await sql`
+      INSERT INTO creations (user_id, prompt, content, type) 
+      VALUES (${userId}, ${prompt}, ${content}, 'email')
+    `;
 
-    if (plan !== 'premium') {
+    if (plan !== "premium") {
       await clerkClient.users.updateUserMetadata(userId, {
         privateMetadata: {
           free_usage: free_usage + 1,
@@ -104,7 +100,6 @@ export const generateEmail = async (req, res) => {
     }
 
     res.json({ success: true, content });
-
   } catch (error) {
     console.log(error.message);
     res.json({ success: false, message: error.message });

@@ -10,6 +10,7 @@ import RemoveObject from './pages/RemoveObject'
 import Coder from './pages/Coder'
 
 import {Toaster} from 'react-hot-toast'
+import Dashboard from './pages/Dashboard'
 
 const App = () => {
   return (
@@ -18,11 +19,12 @@ const App = () => {
       <Routes>
         <Route path='/' element={<Home />}/>
           <Route path='/ai' element={<Layout/>}>
+          <Route index element={<Dashboard />}/>
             <Route path='write-article' element={<WriteArticle />}/>
             <Route path='write-email' element={<WriteEmail />}/>
-            <Route path='gen-img' element={<GenerateImage />}/>
-            <Route path='rm-bg' element={<RemoveBackground />}/>
-            <Route path='rm-obj' element={<RemoveObject />}/>
+            <Route path='generate-images' element={<GenerateImage />}/>
+            <Route path='remove-background' element={<RemoveBackground />}/>
+            <Route path='remove-object' element={<RemoveObject />}/>
             <Route path='coder' element={<Coder />}/>
           </Route>
       </Routes>
