@@ -3,6 +3,8 @@ import sql from "../configs/db.js";
 import { clerkClient } from "@clerk/express";
 import { GoogleGenAI } from "@google/genai";
 import axios from "axios";
+import FormData from 'form-data';
+import { cloudinary } from '../configs/cloudinary.js';
 
 const ai = new GoogleGenAI({
   apiKey: process.env.GEMINI_API_KEY,
@@ -118,5 +120,72 @@ export const generateEmail = async (req, res) => {
   } catch (error) {
     console.error("🚨 Gemini Email Error:", error);
     res.json({ success: false, message: error.message });
+  }
+};
+
+export const generateImage = async (req, res) => {
+  const { prompt, publish } = req.body;
+  const { userId } = req.auth();
+  const plan = req.plan;
+  const free_usage = req.free_usage;
+
+  if (!prompt) {
+    return res.status(400).json({ success: false, message: 'Prompt is required' });
+  }
+
+  if (plan !== 'premium') {
+    return res.json({
+      success: false,
+      message: "Upgrade to premium for this feature.",
+    });
+  }
+
+  try {
+    const formData = new FormData();
+    formData.append('prompt', prompt);
+
+    const clipResponse = await axios.post(
+      'https://clipdrop-api.co/text-to-image/v1',
+      formData,
+      {
+        headers: {
+          ...formData.getHeaders(),
+          'x-api-key': process.env.CLIPDROP_API_KEY,
+        },
+        responseType: 'arraybuffer',
+      }
+    );
+
+    const imageBuffer = clipResponse.data;
+
+    const uploadResponse = await new Promise((resolve, reject) => {
+      cloudinary.uploader.upload_stream(
+        { folder: 'clipdrop' },
+        (err, result) => {
+          if (err) return reject(err);
+          resolve(result);
+        }
+      ).end(imageBuffer);
+    });
+
+    const imageUrl = uploadResponse.secure_url;
+
+    await sql`
+      INSERT INTO creations (user_id, prompt, content, type, publish)
+      VALUES (${userId}, ${prompt}, ${imageUrl}, 'image', ${publish ?? false})
+    `;
+
+    return res.status(200).json({
+      success: true,
+      imageUrl,
+    });
+
+  } catch (error) {
+    console.error('ClipDrop error:', error?.response?.data || error.message);
+    return res.status(error?.response?.status || 500).json({
+      success: false,
+      message: 'ClipDrop request failed',
+      error: error?.response?.data || error.message,
+    });
   }
 };
