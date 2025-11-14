@@ -10,6 +10,11 @@ const ai = new GoogleGenAI({
   apiKey: process.env.GEMINI_API_KEY,
 });
 
+const client = new OpenAI({
+  apiKey: process.env.DEEPSEEK_API_KEY,
+  baseURL: "https://api.deepseek.com/v1",
+});
+
 export const generateArticle = async (req, res) => {
   try {
     const { userId } = req.auth();
@@ -17,6 +22,7 @@ export const generateArticle = async (req, res) => {
     const plan = req.plan;
     const free_usage = req.free_usage;
 
+    // Free limit
     if (plan !== "premium" && free_usage >= 10) {
       return res.json({
         success: false,
@@ -24,27 +30,23 @@ export const generateArticle = async (req, res) => {
       });
     }
 
-    const response = await ai.models.generateContent({
-      model: "gemini-2.5-flash",
-      contents: [
+    // ⚡ Using DeepSeek V3.2 Exp (Non-thinking mode)
+    const completion = await client.chat.completions.create({
+      model: "deepseek-chat",   // <<< UPDATED MODEL
+      messages: [
         {
           role: "user",
-          parts: [
-            { text: `Write a detailed ${length}-word article on ${prompt}` },
-          ],
+          content: `Write a detailed ${length}-word article on: ${prompt}`,
         },
       ],
-      generationConfig: { temperature: 0.7 },
+      temperature: 0.7,
     });
 
-    console.log("🔍 Gemini Raw Response:", JSON.stringify(response, null, 2));
-
-    // ✅ Extract text safely
     const content =
-      response?.candidates?.[0]?.content?.parts?.[0]?.text ||
+      completion?.choices?.[0]?.message?.content ||
       "No content generated.";
 
-    // Store result
+    // DB save
     await sql`
       INSERT INTO creations (user_id, prompt, content, type)
       VALUES (${userId}, ${prompt}, ${content}, 'article')
@@ -58,8 +60,11 @@ export const generateArticle = async (req, res) => {
 
     res.json({ success: true, content });
   } catch (error) {
-    console.error("🚨 Gemini Error:", error);
-    res.json({ success: false, message: error.message });
+    console.error("🚨 DeepSeek Error:", error);
+    res.json({
+      success: false,
+      message: error?.response?.data || error.message,
+    });
   }
 };
 
@@ -70,7 +75,7 @@ export const generateEmail = async (req, res) => {
     const plan = req.plan;
     const free_usage = req.free_usage;
 
-    // ✅ Limit check
+    // Free limit
     if (plan !== "premium" && free_usage >= 10) {
       return res.json({
         success: false,
@@ -78,48 +83,43 @@ export const generateEmail = async (req, res) => {
       });
     }
 
-    // ✅ Gemini content generation
-    const response = await ai.models.generateContent({
-      model: "gemini-2.5-flash",
-      contents: [
+    // ⚡ DeepSeek Email Generation (Fast Model)
+    const completion = await client.chat.completions.create({
+      model: "deepseek-chat", // FAST model
+      messages: [
         {
           role: "user",
-          parts: [
-            {
-              text: `Write a professional email in a ${tone} tone based on the following prompt:\n\n${prompt}`,
-            },
-          ],
+          content: `Write a professional email in a ${tone} tone based on the following prompt:\n\n${prompt}`,
         },
       ],
-      generationConfig: {
-        temperature: 0.7,
-        maxOutputTokens: 500,
-      },
+      temperature: 0.7,
+      max_tokens: 500,
     });
 
-    // ✅ Extract text correctly for this SDK version
     const content =
-      response?.candidates?.[0]?.content?.parts?.[0]?.text ||
+      completion?.choices?.[0]?.message?.content ||
       "No content generated.";
 
-    // ✅ Save to DB
+    // Save to DB
     await sql`
       INSERT INTO creations (user_id, prompt, content, type)
       VALUES (${userId}, ${prompt}, ${content}, 'email')
     `;
 
-    // ✅ Update free usage count if not premium
+    // Increase count for free users
     if (plan !== "premium") {
       await clerkClient.users.updateUserMetadata(userId, {
         privateMetadata: { free_usage: free_usage + 1 },
       });
     }
 
-    // ✅ Send response
     res.json({ success: true, content });
   } catch (error) {
-    console.error("🚨 Gemini Email Error:", error);
-    res.json({ success: false, message: error.message });
+    console.error("🚨 DeepSeek Email Error:", error);
+    res.json({
+      success: false,
+      message: error?.response?.data || error.message,
+    });
   }
 };
 
