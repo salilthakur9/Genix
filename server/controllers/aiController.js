@@ -189,3 +189,47 @@ export const generateImage = async (req, res) => {
     });
   }
 };
+
+
+export const removeImageBackground = async (req, res) => {
+
+  try{
+  const { userId } = req.auth();
+  const image = req.file;
+  const plan = req.plan;
+
+  if (plan !== 'premium') {
+    return res.json({
+      success: false,
+      message: "upgrade to premium for this feature.",
+    });
+  }
+
+    const {secure_url} = await cloudinary.uploader.upload(image.path, {
+        transformation: [
+            {
+                effect: 'background_removal',
+                background_removal: 'remove_the_background'
+            }
+        ]
+    })
+
+    await sql`
+      INSERT INTO creations (user_id, prompt, content, type)
+      VALUES (${userId}, 'Remove background from image', ${secure_url}, 'image')
+    `;
+
+    return res.status(200).json({
+      success: true,
+      secure_url,
+    });
+
+  } catch (error) {
+    console.error('ClipDrop error:', error?.response?.data || error.message);
+    return res.status(error?.response?.status || 500).json({
+      success: false,
+      message: 'ClipDrop request failed',
+      error: error?.response?.data || error.message,
+    });
+  }
+}
