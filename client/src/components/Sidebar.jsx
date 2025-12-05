@@ -20,7 +20,6 @@ const navItems = [
   { to: "/ai/generate-images", label: "Generate Images", Icon: Image },
   { to: "/ai/remove-background", label: "Remove Background", Icon: Eraser },
   { to: "/ai/remove-object", label: "Remove Object", Icon: Scissors },
-  { to: "/ai/coder", label: "Multi-Lang Coder", Icon: Code },
   { to: "/ai/community", label: "Community", Icon: Users },
 ];
 

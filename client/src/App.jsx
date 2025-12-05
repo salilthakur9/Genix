@@ -6,9 +6,9 @@ import WriteEmail from './pages/WriteEmail'
 import GenerateImage from './pages/GenerateImage'
 import RemoveBackground from './pages/RemoveBackground'
 import RemoveObject from './pages/RemoveObject'
-import Coder from './pages/Coder'
 import { Toaster } from 'react-hot-toast'
 import Dashboard from './pages/Dashboard'
+import Community from './pages/Community'
 
 const App = () => {
   return (
@@ -23,7 +23,7 @@ const App = () => {
           <Route path='generate-images' element={<GenerateImage />}/>
           <Route path='remove-background' element={<RemoveBackground />}/>
           <Route path='remove-object' element={<RemoveObject />}/>
-          <Route path='coder' element={<Coder />}/>
+          <Route path='community' element={<Community />} />
         </Route>
       </Routes>
     </div>
