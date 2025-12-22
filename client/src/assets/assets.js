@@ -42,12 +42,5 @@ export const AiToolsData = [
         Icon: Scissors,
         bg: { from: '#5C6AF1', to: '#427DF5' },
         path: '/ai/remove-object'
-    },
-    {
-        title: 'Multi-Lang Coder',
-        description: 'Give a function and let the coder implement that function in any language of your choice.',
-        Icon: Code,
-        bg: { from: '#12B7AC', to: '#08B6CE' },
-        path: '/ai/review-resume'
     }
 ]
