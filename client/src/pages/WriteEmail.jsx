@@ -4,6 +4,7 @@ import axios from "axios";
 import { useAuth } from "@clerk/clerk-react";
 import toast from "react-hot-toast";
 import Markdown from "react-markdown";
+import ArticleSkeleton from "../components/ArticleSkeleton"; // ✅ added
 
 axios.defaults.baseURL = import.meta.env.VITE_BASE_URL;
 
@@ -28,6 +29,7 @@ const WriteEmail = () => {
     e.preventDefault();
     try {
       setLoading(true);
+      setContent("");
 
       const prompt = `Write an email about "${subject}" from a ${senderDesignation} to a ${receiverDesignation}, with a ${selectedTone.text.toLowerCase()} tone.`;
 
@@ -62,7 +64,6 @@ const WriteEmail = () => {
           <h1 className="text-xl font-semibold">Email Configuration</h1>
         </div>
 
-        {/* Subject */}
         <p className="mt-6 text-sm font-medium">Email Subject</p>
         <input
           onChange={(e) => setSubject(e.target.value)}
@@ -73,7 +74,6 @@ const WriteEmail = () => {
           required
         />
 
-        {/* Receiver */}
         <p className="mt-4 text-sm font-medium">Receiver's Designation</p>
         <input
           onChange={(e) => setReceiverDesignation(e.target.value)}
@@ -84,7 +84,6 @@ const WriteEmail = () => {
           required
         />
 
-        {/* Sender */}
         <p className="mt-4 text-sm font-medium">Your Designation</p>
         <input
           onChange={(e) => setSenderDesignation(e.target.value)}
@@ -95,13 +94,12 @@ const WriteEmail = () => {
           required
         />
 
-        {/* Tone Selection */}
         <p className="mt-4 text-sm font-medium">Email Tone</p>
         <div className="mt-3 flex gap-3 flex-wrap sm:max-w-9/11">
           {emailTones.map((item, index) => (
             <span
-              onClick={() => setSelectedTone(item)}
               key={index}
+              onClick={() => setSelectedTone(item)}
               className={`text-xs px-4 py-1 border rounded-full cursor-pointer ${
                 selectedTone.tone === item.tone
                   ? "bg-purple-50 text-purple-700"
@@ -113,14 +111,13 @@ const WriteEmail = () => {
           ))}
         </div>
 
-        {/* Submit */}
         <button
           disabled={loading}
-          className="w-full flex justify-center items-center gap-2 
-          bg-gradient-to-r from-[#8E37EB] to-[#ae76e9] text-white px-4 py-2 mt-6 text-sm rounded-lg cursor-pointer"
+          className="w-full flex justify-center items-center gap-2 cursor-pointer 
+          bg-gradient-to-r from-[#8E37EB] to-[#ae76e9] text-white px-4 py-2 mt-6 text-sm rounded-lg"
         >
           {loading ? (
-            <span className="w-4 h-4 my-1 rounded-full border-2 border-t-transparent animate-spin"></span>
+            <span className="w-4 h-4 my-1 rounded-full border-2 border-t-transparent animate-spin" />
           ) : (
             <Send className="w-5" />
           )}
@@ -135,7 +132,11 @@ const WriteEmail = () => {
           <h1 className="text-xl font-semibold">Generated Email</h1>
         </div>
 
-        {!content ? (
+        {loading ? (
+          <div className="mt-4">
+            <ArticleSkeleton />
+          </div>
+        ) : !content ? (
           <div className="flex-1 flex justify-center items-center">
             <div className="text-sm flex flex-col items-center gap-5 text-gray-400">
               <Mail className="w-9 h-9" />
