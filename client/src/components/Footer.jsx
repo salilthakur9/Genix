@@ -1,9 +1,15 @@
 import React from 'react'
 import { assets } from '../assets/assets'
+import {motion} from "framer-motion";
 
 const Footer = () => {
   return (
-    <footer className="px-6 md:px-16 lg:px-24 xl:px-32 pt-8 w-full text-gray-500 mt-20">
+    <motion.footer className="px-6 md:px-16 lg:px-24 xl:px-32 pt-8 w-full text-gray-500 mt-20"
+    initial={{ opacity: 0.2, y: 100 }}
+      transition={{ duration: 1 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+    >
     <div className="flex flex-col md:flex-row justify-between w-full gap-10 border-b border-gray-500/30 pb-6">
         <div className="md:max-w-96">
             <img className="h-9" src={assets.logo} alt="logo"/>
@@ -36,7 +42,7 @@ const Footer = () => {
     <p className="pt-4 text-center text-xs md:text-sm pb-5">
         Copyright 2025 © <span className='text-blue-400'>Genix</span> | All Right Reserved.
     </p>
-</footer>
+</motion.footer>
   )
 }
 

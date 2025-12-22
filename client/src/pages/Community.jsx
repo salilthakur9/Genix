@@ -65,7 +65,7 @@ const Community = () => {
         <div className="w-12 h-12 border-4 border-[#9234EA] border-t-transparent rounded-full animate-spin"></div>
 
         <p className="text-2xl font-medium text-gray-600 animate-pulse">
-          Loading… because I don’t ghost like your ex 👻
+          Loading… Please Wait...
         </p>
       </div>
     );

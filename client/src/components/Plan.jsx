@@ -1,9 +1,15 @@
 import React from "react";
 import {PricingTable} from '@clerk/clerk-react'
+import {motion} from 'framer-motion';
 
 const Plan = () => {
   return (
-    <div className="bg-gradient-to-t from-white via-blue-50 to-white">
+    <motion.div className="bg-gradient-to-t from-white via-blue-50 to-white"
+    initial={{ opacity: 0.2, y: 100 }}
+      transition={{ duration: 1 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+    >
     <div className="max-w-2xl mx-auto z-20 my-30">
       <div className="text-center">
         <h2 className="text-slate-700 text-[42px] font-semibold">
@@ -18,7 +24,7 @@ const Plan = () => {
         <PricingTable />
       </div>
     </div>
-    </div>
+    </motion.div>
   );
 };
 

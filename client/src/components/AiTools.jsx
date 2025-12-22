@@ -1,13 +1,19 @@
 import { AiToolsData } from "../assets/assets";
 import { useNavigate } from "react-router-dom";
 import { useUser } from "@clerk/clerk-react";
+import {motion} from 'framer-motion';
 
 const AiTools = () => {
 
     const navigate = useNavigate();
     const {user}= useUser()
   return (
-    <div className="px-4 sm:px-20 xl:px-32 my-24 bg-gradient-to-t from-white via-blue-50 to-white">
+    <motion.div className="px-4 sm:px-20 xl:px-32 my-24 bg-gradient-to-t from-white via-blue-50 to-white"
+    initial={{ opacity: 0.2, y: 100 }}
+      transition={{ duration: 1 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+    >
       <div className="text-center">
         <h2 className="text-slate-700 text-[42px] font-semibold">
           Powerful AI Tools
@@ -26,7 +32,7 @@ const AiTools = () => {
             </div>
             ))}
       </div>
-    </div>
+    </motion.div>
   );
 };
 

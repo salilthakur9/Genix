@@ -1,3 +1,4 @@
+import {motion} from 'framer-motion';
 const Testimonial = () => {
     const cardsData = [
         {
@@ -57,7 +58,12 @@ const Testimonial = () => {
     );
 
     return (
-        <section className="px-4 md:px-8 py-12 bg-gradient-to-t from-white via-blue-50 to-white">
+        <motion.section className="px-4 md:px-8 py-12 bg-gradient-to-t from-white via-blue-50 to-white"
+        initial={{ opacity: 0.2, y: 100 }}
+      transition={{ duration: 1 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+        >
             {/* Heading */}
             <div className="text-center mb-10 max-w-2xl mx-auto">
                 <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-2">Loved by Creators</h2>
@@ -99,7 +105,7 @@ const Testimonial = () => {
                 </div>
                 <div className="absolute right-0 top-0 h-full w-20 z-10 pointer-events-none bg-gradient-to-l from-gray-50 to-transparent"></div>
             </div>
-        </section>
+        </motion.section>
     );
 };
 
