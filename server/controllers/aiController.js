@@ -22,7 +22,6 @@ export const generateArticle = async (req, res) => {
     const plan = req.plan;
     const free_usage = req.free_usage;
 
-    // Free limit
     if (plan !== "premium" && free_usage >= 10) {
       return res.json({
         success: false,
@@ -30,9 +29,8 @@ export const generateArticle = async (req, res) => {
       });
     }
 
-    // ⚡ Using DeepSeek V3.2 Exp (Non-thinking mode)
     const completion = await client.chat.completions.create({
-      model: "deepseek-chat",   // <<< UPDATED MODEL
+      model: "deepseek-chat",   
       messages: [
         {
           role: "user",
@@ -46,7 +44,6 @@ export const generateArticle = async (req, res) => {
       completion?.choices?.[0]?.message?.content ||
       "No content generated.";
 
-    // DB save
     await sql`
       INSERT INTO creations (user_id, prompt, content, type)
       VALUES (${userId}, ${prompt}, ${content}, 'article')
@@ -75,7 +72,7 @@ export const generateEmail = async (req, res) => {
     const plan = req.plan;
     const free_usage = req.free_usage;
 
-    // Free limit
+    
     if (plan !== "premium" && free_usage >= 10) {
       return res.json({
         success: false,
@@ -83,9 +80,8 @@ export const generateEmail = async (req, res) => {
       });
     }
 
-    // ⚡ DeepSeek Email Generation (Fast Model)
     const completion = await client.chat.completions.create({
-      model: "deepseek-chat", // FAST model
+      model: "deepseek-chat", 
       messages: [
         {
           role: "user",
@@ -100,13 +96,11 @@ export const generateEmail = async (req, res) => {
       completion?.choices?.[0]?.message?.content ||
       "No content generated.";
 
-    // Save to DB
     await sql`
       INSERT INTO creations (user_id, prompt, content, type)
       VALUES (${userId}, ${prompt}, ${content}, 'email')
     `;
 
-    // Increase count for free users
     if (plan !== "premium") {
       await clerkClient.users.updateUserMetadata(userId, {
         privateMetadata: { free_usage: free_usage + 1 },
